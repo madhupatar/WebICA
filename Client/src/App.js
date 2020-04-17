@@ -21,7 +21,6 @@ class App extends React.Component {
                     <Route path="/search/:name" component={HomePage} />
                     <Route path="/register" component={Registration} />
                     <Route exact path="/customLogin" component={CustomLogin} />
-                    <Route path="/googleLogin" component={CustomLogin} />
                 </Switch>
             </Router>
         );
