@@ -26,3 +26,8 @@ export function logout(userName) {
 export function anyValidSession() {
     return sessionCookie !== null;
 }
+
+export function getUserName() {
+    // return Object.keys(sessionCookie)[0]
+    return "aahahah"
+}

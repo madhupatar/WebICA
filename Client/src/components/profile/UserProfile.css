@@ -1,0 +1,57 @@
+.profile-pic {
+    border-radius: 38px;
+    max-width: 75px;
+    height: 75px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 35px;
+    display: block;
+}
+
+.details-container {
+    display: flex;
+    width: 400px;
+    justify-content: space-between;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.label {
+    margin-top: 45px;
+}
+
+.profile-value {
+    margin-top: 35px;
+    height: 35px;
+    width: 195px;
+}
+
+.profile-value-checker {
+    margin-right: 100px;
+    margin-top: 45px;
+}
+
+.save-button {
+    margin-top: 35px;
+    max-width: 125px;
+    margin-left: auto;
+    margin-right: auto;
+    background:white;
+    color:#444;
+    display: block;
+    height: 30px;
+}
+
+.save-button:hover {
+    background:gray;
+    color:#444;
+}
+
+.user-profile-container {
+    border: 2px solid black;
+    max-width: 500px;
+    margin-top: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 25px;
+}
