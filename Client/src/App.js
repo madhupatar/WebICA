@@ -1,25 +1,30 @@
 import React from 'react';
-import './App.css';
-import Header from './components/layout/Header';
-import {BrowserRouter as Router, Route, Switch, Link, Redirect} from "react-router-dom";
+import {Route, Switch, Router } from 'react-router-dom';
+import HomePage from "./components/HomePage";
+import MainLogin from "./components/login/MainLogin";
+import Registration from "./components/login/RegistrationForm";
+import CustomLogin from "./components/login/CustomLogin";
+import history from "./services/History";
 
-//Pages
-import MainPage from "./pages/index";
-import BreweryPage from "./pages/brewery"
-import LoginRegisterPage from "./pages/login-register"
-import NotFoundPage from "./pages/404"
-import BeerPage from "./pages/beer"
-import MessagePage from "./pages/message"
-import ViewMessagePage from "./pages/message-view";
-import AdminComponent from "./components/AdminComponent";
-
+// Check how to send username param in the root link
+// Check if we can work on the history link
 class App extends React.Component {
     render() {
         return (
-            <div>
-                Hello world
-            </div>
-        )
+            <Router history={history}>
+                <Switch>
+                    <Route exact path="/" component={HomePage} />
+                    {/* <Route path="*(/:username)" component={HomePage} /> */}
+                    <Route path="/homeNologin" component={MainLogin} />
+                    <Route path="/profile/:username" component={HomePage} />
+                    <Route path="/createGroup" component={HomePage} />
+                    <Route path="/search/:name" component={HomePage} />
+                    <Route path="/register" component={Registration} />
+                    <Route exact path="/customLogin" component={CustomLogin} />
+                    <Route path="/googleLogin" component={CustomLogin} />
+                </Switch>
+            </Router>
+        );
     }
 }
 
