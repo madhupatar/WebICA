@@ -12,5 +12,9 @@ module.exports = mongoose.Schema({
         type: String,
         enum: ["Admin", "Moderator", "User"],
         default: "User"
-    }
+    },
+    following: [{
+        type: String,
+        default: []
+    }]
 }, {collection: 'users'})

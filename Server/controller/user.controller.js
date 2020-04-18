@@ -46,3 +46,9 @@ exports.findUserByCrendentials = (req, res) => {
     .then((user) => res.json(user))
     .catch(() => res.status(400).send("Failed to login"))
 }
+
+exports.updateUserDetails = (req, res) => {
+    userDao.updateUserDetails(req.params.userName, req.body)
+    .then(user => res.json(user))
+    .catch(() => res.status(400).send("Failed to update"))
+}

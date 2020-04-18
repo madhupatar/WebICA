@@ -29,6 +29,7 @@ app.route("/users")
     .post(userController.createUser);
 
 app.route("/users/:userName")
-    .get(userController.getByUserName);
+    .get(userController.getByUserName)
+    .put(userController.updateUserDetails);
 
 app.listen(4000)
