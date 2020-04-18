@@ -33,7 +33,7 @@ exports.createUser = (req, res) => {
         }
         else {
             userDao.createUser(userInfo)
-            .then(() => res.send("Created User successfully."))
+            .then((user) => res.json(user))
             .catch(() => res.status(400).send("Failed"))
         }
             
