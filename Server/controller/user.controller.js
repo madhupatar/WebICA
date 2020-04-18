@@ -2,12 +2,14 @@ const userDao = require('../daos/userDao');
 
 exports.getByUserName = (req, res) => {
     userDao.findUserByUserName(req.params.userName)
-    .then((user) => res.send(user))
+    .then((user) => res.json(user))
+    .catch(() => res.status(400).send("Failed"))
 };
 
 exports.getAllUsers = (req, res) => {
     userDao.findAllUsers()
-    .then((users) => res.send(users))
+    .then((users) => res.json(users))
+    .catch(() => res.status(400).send("Failed"))
 }
 
 exports.createUser = (req, res) => {
@@ -16,9 +18,10 @@ exports.createUser = (req, res) => {
         lastName: req.body.lastName,
         userName: req.body.userName,
         password: req.body.password,
-        type: req.body.type
+        userType: req.body.userType
     };
 
     userDao.createUser(userInfo)
     .then(() => res.send("Created User successfully."))
+    .catch(() => res.status(400).send("Failed"))
 }
