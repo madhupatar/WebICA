@@ -6,14 +6,13 @@ import TopBar from "./TopBar";
 
 export default class HomePage extends Component {
     render() {
-        console.log("Hey")
         if (!sessionMgmt.anyValidSession())
             return <Redirect to="/homeNologin" />
             
         return (
             <Container>
-                <TopBar userName={this.props.username} showSearch={true}/>
-                <h2>Welcom {this.props.username} !!!</h2>
+                <TopBar userName={sessionMgmt.getUserName()} showSearch={true}/>
+                <h2>Welcom {sessionMgmt.getUserName()} !!!</h2>
             </Container>
         );
     }
