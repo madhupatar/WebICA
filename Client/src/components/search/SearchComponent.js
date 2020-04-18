@@ -7,13 +7,13 @@ export default class SearchComponent extends Component {
         super(props);
 
         this.state = {
-            listOfUserNames: ["haha", "wow"]
+            listOfUserNames: []
         }
     }
 
     componentDidMount() {
         let self = this;
-        fetch('apiUrl' + this.props.match.params.keyword, {
+        fetch('http://localhost:4000/search/' + this.props.match.params.keyword, {
             method: 'GET',
             headers: {
             'Accept': 'application/json',
@@ -21,8 +21,7 @@ export default class SearchComponent extends Component {
         }})
         .then(resp => resp.json())
         .then(resp => {
-            console.log(resp);
-            // self.setState({listOfUserNames: resp});
+            self.setState({listOfUserNames: resp});
         });
     }
 
@@ -30,12 +29,13 @@ export default class SearchComponent extends Component {
         let searchCards = [];
         this.state.listOfUserNames.forEach(user => {
             searchCards.push(
-            <Card style={{ width: '18rem' }}>
+            <Card style={{ width: '28rem' }}>
             <Card.Body>
                 <Card.Text>
                     UserName: {user}
                 </Card.Text>
                 <Button variant="primary" onClick={() => history.push("/conversation/" + user)}>Private Chat</Button>
+                <Button className="ml-3" variant="primary" onClick={() => history.push("/profile/" + user)}>View Profile</Button>
             </Card.Body>
             </Card>
             );
