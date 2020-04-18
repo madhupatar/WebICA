@@ -52,3 +52,12 @@ exports.updateUserDetails = (req, res) => {
     .then(user => res.json(user))
     .catch(() => res.status(400).send("Failed to update"))
 }
+
+exports.getUserByKeyword = (req, res) => {
+    userDao.getUserByKeyword(req.params.keyword.toLocaleLowerCase())
+    .then(users => {
+        const userNames = users.map(user => user.userName)
+        res.json(userNames)
+    })
+    .catch(() => res.status(400).send("Failed to find users"))
+}

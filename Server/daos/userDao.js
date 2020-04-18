@@ -21,6 +21,10 @@ updateUserDetails = (userName, userInfo) => {
     return userModel.updateOne({userName: userName}, {$set: {...userInfo}})
 }
 
+getUserByKeyword = (keyword) => {
+    return userModel.find({userName: {$regex: ".*" + keyword + ".*"}})
+}
+
 module.exports = {
-    findUserByUserName, createUser, findAllUsers, findUserByCredentials, updateUserDetails
+    findUserByUserName, createUser, findAllUsers, findUserByCredentials, updateUserDetails, getUserByKeyword
 }

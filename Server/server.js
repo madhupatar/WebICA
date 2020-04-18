@@ -32,4 +32,7 @@ app.route("/users/:userName")
     .get(userController.getByUserName)
     .put(userController.updateUserDetails);
 
+app.route("/search/:keyword")
+    .get(userController.getUserByKeyword);
+
 app.listen(4000)
