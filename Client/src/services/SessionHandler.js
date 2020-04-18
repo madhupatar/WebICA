@@ -1,27 +1,32 @@
-var sessionCookie = localStorage.getItem("session");
+var sessionCookie = JSON.parse(localStorage.getItem("session"));
 
-export function loginUser(userName) {
+export function loginUser(userName, userInfo) {
     if (sessionCookie === null) {
         localStorage.setItem("session", {})
         sessionCookie = {}
     }
-
-    if (sessionCookie[userName])
-        return;
     
-    sessionCookie[userName] = true;
-    localStorage.setItem("session", sessionCookie)
+    sessionCookie = userInfo;
+    localStorage.setItem("session", JSON.stringify(sessionCookie))
+}
+
+export function getUserInfo(keyName) {
+    return sessionCookie[keyName];
+}
+
+export function saveUserInfo(keyName, value) {
+    sessionCookie[keyName] = value;
+    localStorage.setItem("session", JSON.stringify(sessionCookie))
 }
 
 export function isLoggedIn(userName) {
-    if (Object.keys(sessionCookie)[0] !== userName)
+    if (sessionCookie.userName !== userName)
         return false;
 
-    return sessionCookie[userName];
+    return true;
 }
 
 export function logout(userName) {
-    sessionCookie[userName] = false
     localStorage.removeItem("session");
     sessionCookie = null;
 }
@@ -31,5 +36,5 @@ export function anyValidSession() {
 }
 
 export function getUserName() {
-    return Object.keys(sessionCookie)[0]
+    return sessionCookie.userName
 }

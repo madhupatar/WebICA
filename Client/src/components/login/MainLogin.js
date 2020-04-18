@@ -59,7 +59,7 @@ export default class MainLogin extends Component {
                 })
                 .then(resp => resp.json())
                 .then(resp => {
-                    sessionMgmt.loginUser(data.userName)
+                    sessionMgmt.loginUser(data.userName, resp[0])
                     history.push("/")
                 })
                 .catch(() => {
@@ -73,7 +73,7 @@ export default class MainLogin extends Component {
                     })
                     .then(resp => resp.json())
                     .then(resp => {
-                        sessionMgmt.loginUser(data.userName)
+                        sessionMgmt.loginUser(data.userName, resp)
                         history.push("/")
                     })
                 })

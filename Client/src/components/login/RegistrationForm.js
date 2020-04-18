@@ -35,8 +35,9 @@ export default class Registration extends Component {
             },
             body: JSON.stringify(newuser)
         })
+        .then(resp => resp.json())
         .then(resp => {
-            sessionMgmt.loginUser(newuser.userName)
+            sessionMgmt.loginUser(newuser.userName, resp)
             history.push("/")
         })
         .catch(() => self.setState({showAlert: true}));
