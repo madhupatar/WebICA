@@ -5,5 +5,8 @@ module.exports = mongoose.Schema({
     lastName: String,
     userName: String,
     password: String,
-    type: String
+    userType: {
+        type: String,
+        enum: ["Admin", "Moderator", "User"]
+    }
 }, {collection: 'users'})
