@@ -22,7 +22,7 @@ class App extends React.Component {
                     <Route exact path="/" component={HomePage} />
                     {/* <Route path="*(/:username)" component={HomePage} /> */}
                     <Route path="/homeNologin" component={MainLogin} />
-                    <Route path="/createGroup" component={HomePage} />
+                    {/* <Route path="/createGroup" component={HomePage} /> */}
                     <Route path="/register" component={Registration} />
                     <Route exact path="/customLogin" component={CustomLogin} />
                     <Route exact path="/profile/:userName" component={UserProfile} />
@@ -30,6 +30,7 @@ class App extends React.Component {
                     <Route exact path="/adminHome" component={AdminHomePage} />
                     <Route exact path="/createConversation" component={CreateConversation} />
                     <Route exact path="/groupInfo/:groupName" component={GroupInfo} />
+                    <Route exact path="/conversation/:username" component={HomePage} />
                 </Switch>
             </Router>
         );

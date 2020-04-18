@@ -1,0 +1,55 @@
+.card-profile-pic {
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  display: inline-block;
+}
+
+.user-full-name {
+  display: inline-block;
+  width: 150px;
+  height: 20px;
+  margin-left: 10px;
+  margin-top: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.last-text {
+  display: inline-block;
+  width: 250px;
+  height: 25px;
+  margin-top: 2px;
+  margin-left: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chat-card-container {
+  width: 340px;
+  height: 75px;
+  display: block;
+  border: 1px solid #d3d3d3;
+}
+
+.card-selected {
+  box-shadow: 0 1px 6px 0 rgba(32, 33, 36, 0.28);
+  border: 2px solid black;
+}
+
+.chat-card-container:hover {
+  box-shadow: 0 1px 6px 0 rgba(32, 33, 36, 0.28);
+  border: 2px solid #d3d3d3;
+}
+
+.user-info-container {
+  display: inline-block;
+  width: 250px;
+  margin-left: 10px;
+}
+
+.bold {
+  font-weight: bold;
+}
