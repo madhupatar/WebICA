@@ -1,51 +1,60 @@
 import React, { Component } from "react";
+import history from "../../services/History";
+import * as sessionMgmt from '../../services/SessionHandler';
+import {Alert} from "react-bootstrap";
 
 export default class Registration extends Component {
     constructor(props) {
         super(props);
-        this.handleClickForSignUp = this.handleClickForSignUp.bind(this); 
-        // this.handleClickForBack = this.handleClickForBack.bind(this);
+        
         this.state = {
-            fullName: '',
-            userName: '',
-            password: '',
+            userType: "User",
+            showAlert: false
         }
+
+        this.firstNameRef = React.createRef();
+        this.lastNameRef = React.createRef();
+        this.userNameRef = React.createRef();
+        this.passwordRef = React.createRef();
     }
 
-    inputFieldChange = (event) => {
-        this.setState({[event.target.id.toString()]: event.target.value});
-    };
-
-    handleClickForSignUp() {
+    handleClickForSignUp = () => {
         var self = this;
         let newuser = {};
-        newuser.fullName = this.state.fullName
-        newuser.userName = this.state.userName;
-        newuser.password = this.state.password;
-        newuser.visibility = true;
-        newuser.status = true;
+        newuser.firstName = this.firstNameRef.current.value;
+        newuser.lastName = this.lastNameRef.current.value;
+        newuser.userName = this.userNameRef.current.value;
+        newuser.password = this.passwordRef.current.value;
+        newuser.userType = this.state.userType;
 
-        fetch('http://localhost:8080/prattle/rest/user/create', {
-                    method: 'POST',
-                    headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(newuser)
-                })
-                .then(resp => resp.json())
-                .then(x => {
-                    if (x)
-                        self.props.onComplete("signup", newuser.userName);
-                    else 
-                        // throw an error
-                        console.log("error");
-                });
+        fetch('http://localhost:4000/users', {
+            method: 'POST',
+            headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newuser)
+        })
+        .then(resp => {
+            sessionMgmt.loginUser(newuser.userName)
+            history.push("/")
+        })
+        .catch(() => self.setState({showAlert: true}));
+    }
+
+    handleUserTypeSelection = (e) => {
+        this.setState({userType: e.target.value});
     }
 
     render() {
+        let self = this;
         return (
             <div className="container">
+                {
+                    this.state.showAlert ? <Alert variant="danger" onClose={() => self.setState({showAlert: false})} dismissible>
+                                                <Alert.Heading>Unable to register. Check the details</Alert.Heading>
+                                            </Alert> : null
+                }
                 <div className="form-group">
                     <h1>Register Here</h1>
                 </div>
@@ -53,15 +62,32 @@ export default class Registration extends Component {
                     <div className="col">
                         <label htmlFor="fname"
                                className="control-label">
-                            Full Name
+                            First Name
                         </label>
                     </div>
                     <div className="col-10">
                         <input type="text"
                                className="form-control"
-                               onChange={this.inputFieldChange}
-                               id="FullName"
-                               placeholder="FullName"
+                               ref={this.firstNameRef}
+                               id="firstName"
+                               placeholder="First Name"
+                               required/>
+                    </div>
+                </div>
+
+                <div className="row form-group">
+                    <div className="col">
+                        <label htmlFor="lname"
+                               className="control-label">
+                            Last Name
+                        </label>
+                    </div>
+                    <div className="col-10">
+                        <input type="text"
+                               className="form-control"
+                               ref={this.lastNameRef}
+                               id="lastName"
+                               placeholder="Last Name"
                                required/>
                     </div>
                 </div>
@@ -78,7 +104,7 @@ export default class Registration extends Component {
                         <input type="text"
                                className="form-control"
                                id="username"
-                               onChange={this.inputFieldChange}
+                               ref={this.userNameRef}
                                placeholder="Your User Name"
                                required/>
                     </div>
@@ -95,9 +121,25 @@ export default class Registration extends Component {
                         <input type="password"
                                className="form-control"
                                id="password"
-                               onChange={this.inputFieldChange}
+                               ref={this.passwordRef}
                                placeholder="Your Password"
                                required/>
+                    </div>
+                </div>
+
+                <div className="row form-group">
+                    <div className="col">
+                        <label htmlFor="fname"
+                               className="control-label">
+                            Select Type of User
+                        </label>
+                    </div>
+                    <div className="col-10">
+                        <select id="userType" value={this.state.userType} onChange={this.handleUserTypeSelection}>
+                            <option value="Admin">Admin</option>
+                            <option value="Moderator">Moderator</option>
+                            <option value="User">User</option>
+                        </select>
                     </div>
                 </div>
 
@@ -108,7 +150,7 @@ export default class Registration extends Component {
                         </button>
                     </div>
                     <div>
-                        <button className="btn btn-primary" onClick={() => this.props.onComplete("signUpToLogin")}>
+                        <button className="btn btn-primary" onClick={() => history.goBack()}>
                              Back
                         </button>
                     </div>
