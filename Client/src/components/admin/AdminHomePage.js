@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { Container, Table, Button } from "react-bootstrap";
 import history from "../../services/History";
+import TopBar from "../TopBar";
+import * as sessionMgmt from "../../services/SessionHandler";
 
 export default class AdminHomePage extends Component {
     constructor(props) {
@@ -20,7 +22,7 @@ export default class AdminHomePage extends Component {
     }
 
     render() {
-        const content = this.state.coversationObj.map(convObj => {
+        const content = this.state.coversationObj.map(convObj => 
             <tr>
                 <td>{convObj._id}</td>
                 <td>{convObj.from}</td>
@@ -34,7 +36,7 @@ export default class AdminHomePage extends Component {
                     }
                 </td>
             </tr>
-        });
+        );
 
         return (
             <Container>
@@ -52,7 +54,7 @@ export default class AdminHomePage extends Component {
                         </tr>
                     </thead>
                     <tbody>
-
+                        {content}
                     </tbody>
                 </Table>
             </Container>

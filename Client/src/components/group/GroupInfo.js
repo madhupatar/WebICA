@@ -24,7 +24,7 @@ export default class GroupInfo extends Component {
     }
 
     updateGroupInfo = () => {
-        
+
     }
 
     render() {
@@ -48,7 +48,7 @@ export default class GroupInfo extends Component {
                         <Button variant="primary" onClick={this.addGroupMember}>Add member</Button>
                         <Button variant="primary" onClick={this.removeGroupMember}>Remove member</Button>
                     </FormGroup>
-                    <Button variant="primary" onClick={}>Update Group Info</Button>
+                    <Button variant="primary" onClick={this.updateGroupInfo}>Update Group Info</Button>
                 </Form>
             </Container>
         )
