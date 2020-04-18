@@ -25,8 +25,19 @@ exports.createUser = (req, res) => {
     if (typeof req.body["userType"] !== 'undefined')
         userInfo["userType"] = req.body.userType
 
-    userDao.createUser(userInfo)
-    .then(() => res.send("Created User successfully."))
+    userDao.findUserByUserName(userInfo.userName)
+    .then(user => {
+        if (user !== null) {
+            console.log(user)
+            res.status(400).send("Failed to create user")
+        }
+        else {
+            userDao.createUser(userInfo)
+            .then(() => res.send("Created User successfully."))
+            .catch(() => res.status(400).send("Failed"))
+        }
+            
+    })
     .catch(() => res.status(400).send("Failed"))
 }
 
