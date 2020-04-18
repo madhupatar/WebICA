@@ -1,4 +1,7 @@
 import React from 'react';
+import * as sessionMgmt from '../../services/SessionHandler';
+import history from "../../services/History";
+import {Alert} from "react-bootstrap";
 
 export default class CustomLogin extends React.Component {
     constructor(props) {
@@ -7,7 +10,8 @@ export default class CustomLogin extends React.Component {
         this.state = {
             userName: '',
             password: '',
-            currentUser: {}
+            currentUser: {},
+            showAlert: false
         };
     }
 
@@ -28,15 +32,21 @@ export default class CustomLogin extends React.Component {
             
 
             var self = this;
-            fetch('http://localhost:8080/prattle/rest/user/customLogin', {
-                        method: 'POST',
+            fetch('http://localhost:4000/login', {
+                        method: 'GET',
                         headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
+                        'userName': self.state.userName,
+                        'password': self.state.password
                         },
-                        body: JSON.stringify(self.state.currentUser)
-                    }).then(resp => self.props.onComplete("login", self.state.userName));
-                    console.log(self.state.currentUser);
+                    })
+                    .then(resp => resp.json())
+                    .then(resp => {
+                        sessionMgmt.loginUser(resp[0].userName)
+                        history.push("/")
+                    })
+                    .catch(() => self.setState({showAlert: true}))
        }
        else {
            alert("Enter some valid information !!!");
@@ -44,8 +54,14 @@ export default class CustomLogin extends React.Component {
     }
 
     render() {
+        let self = this;
         return (
             <div className="container">
+                {
+                    this.state.showAlert ? <Alert variant="danger" onClose={() => self.setState({showAlert: false})} dismissible>
+                                                <Alert.Heading>Invalid Username and password</Alert.Heading>
+                                            </Alert> : null
+                }
                 <div className="form-group mt-4">
                     <h3>Log In </h3>
                 </div>

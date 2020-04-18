@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import {Container} from "react-bootstrap";
 import history from "../../services/History";
+import * as sessionMgmt from '../../services/SessionHandler';
 
 export default class MainLogin extends Component {
     loadGapi = () => {
@@ -43,28 +44,46 @@ export default class MainLogin extends Component {
 
                 var user_info = JSON.parse(success.body);
                 let data = {};
-                data.fullName = user_info.name;
+
+                data.firstName = user_info.given_name;
+                data.lastName = user_info.family_name;
                 data.userName = user_info.email;
-                data.visibility = "true";
-                data.status = "true";
 
                 // user profile information
-                fetch('http://localhost:8080/prattle/rest/user/create', {
-                    method: 'POST',
+                fetch('http://localhost:4000/users/' + data.userName, {
+                    method: 'GET',
                     headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                }).then(res => self.onComplete("login", data.userName));
-                console.log(data);
-                },
-                function(error) {
-                // Error occurred
-                console.log(error);
+                    }
+                })
+                .then(resp => resp.json())
+                .then(resp => {
+                    sessionMgmt.loginUser(data.userName)
+                    history.push("/")
+                })
+                .catch(() => {
+                    fetch('http://localhost:4000/users', {
+                        method: 'POST',
+                        headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(resp => resp.json())
+                    .then(resp => {
+                        sessionMgmt.loginUser(data.userName)
+                        history.push("/")
+                    })
                 })
             },
             function(error) {
+                // Error occurred
+                console.log(error);
+            })
+        },
+        function(error) {
             // Error occurred
             // console.log(error) to find the reason
         })

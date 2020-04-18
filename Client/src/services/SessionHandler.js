@@ -1,17 +1,20 @@
 var sessionCookie = localStorage.getItem("session");
 
-export function loginUser(callback, userName) {
-    if (sessionCookie === null)
-        sessionCookie = localStorage.setItem("session", {})
+export function loginUser(userName) {
+    if (sessionCookie === null) {
+        localStorage.setItem("session", {})
+        sessionCookie = {}
+    }
 
     if (sessionCookie[userName])
         return;
     
     sessionCookie[userName] = true;
+    localStorage.setItem("session", sessionCookie)
 }
 
 export function isLoggedIn(userName) {
-    if (sessionCookie[userName] === null)
+    if (Object.keys(sessionCookie)[0] !== userName)
         return false;
 
     return sessionCookie[userName];
@@ -28,6 +31,5 @@ export function anyValidSession() {
 }
 
 export function getUserName() {
-    // return Object.keys(sessionCookie)[0]
-    return "aahahah"
+    return Object.keys(sessionCookie)[0]
 }
