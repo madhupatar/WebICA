@@ -13,6 +13,10 @@ findAllUsers = () => {
     return userModel.find();
 }
 
+findUserByCredentials = (userName, password) => {
+    return userModel.find({userName: userName, password: password});
+}
+
 module.exports = {
-    findUserByUserName, createUser, findAllUsers
+    findUserByUserName, createUser, findAllUsers, findUserByCredentials
 }
