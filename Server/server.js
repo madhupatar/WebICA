@@ -35,4 +35,18 @@ app.route("/users/:userName")
 app.route("/search/:keyword")
     .get(userController.getUserByKeyword);
 
-app.listen(4000)
+server = app.listen(4000)
+
+const socket = require('socket.io')
+io = socket(server)
+
+// Sample echo logic with socket on the server
+io.on('connection', (socket) => {
+    console.log("New connection");
+
+    socket.on('SEND_MESSAGE', function(data){
+        console.log("got a message");
+        data.to = "User 2";
+        io.emit('RECEIVE_MESSAGE', data);
+    })
+})
