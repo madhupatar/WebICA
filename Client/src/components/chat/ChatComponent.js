@@ -2,6 +2,7 @@ import React from "react";
 import ChatsList from "./ChatsList";
 import ConversationView from "./ConversationView";
 import "./ChatComponent.css";
+import * as socket from "../../services/ChatSocket";
 
 export default class ChatComponent extends React.Component {
   constructor(props) {
@@ -16,6 +17,8 @@ export default class ChatComponent extends React.Component {
     this.addMessageToState = this.addMessageToState.bind(this);
     this.chatsListRef = React.createRef();
     this.conversationRef = React.createRef();
+    
+    socket.registerForEvent("RECEIVE_MESSAGE", this.addMessageToState);
   }
 
   componentDidMount() {
@@ -32,7 +35,7 @@ export default class ChatComponent extends React.Component {
   }
 
   handleSend(message) {
-    this.addMessageToState(message);
+    socket.sendMessage("SEND_MESSAGE", message);
     // this.props.Socket.sendMessageOnSocket(message);
   }
 
