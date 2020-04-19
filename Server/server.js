@@ -18,25 +18,10 @@ app.use(function (req, res, next) {
     next();
 });
 
+// Require all controllers here
 const userController = require('./controller/user.controller')
 
-// Paths to api's
-app.route("/login")
-    .get(userController.findUserByCrendentials);
-
-app.route("/users")
-    .get(userController.getAllUsers)
-    .post(userController.createUser);
-
-app.route("/users/:userName")
-    .get(userController.getByUserName)
-    .put(userController.updateUserDetails);
-
-app.route("/search/:keyword")
-    .get(userController.getUserByKeyword);
-
 server = app.listen(4000)
-
 const socket = require('socket.io')
 io = socket(server)
 
@@ -44,9 +29,11 @@ io = socket(server)
 io.on('connection', (socket) => {
     console.log("New connection");
 
-    socket.on('SEND_MESSAGE', function(data){
-        console.log("got a message");
-        data.to = "User 2";
-        io.emit('RECEIVE_MESSAGE', data);
-    })
+    userController(app, socket);
+    
+    // socket.on('SEND_MESSAGE', function(data){
+    //     console.log("got a message");
+    //     data.to = "User 2";
+    //     io.emit('RECEIVE_MESSAGE', data);
+    // })
 })
