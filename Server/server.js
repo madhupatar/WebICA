@@ -20,6 +20,7 @@ app.use(function (req, res, next) {
 
 // Require all controllers here
 const userController = require('./controller/user.controller')
+const privateChatController = require('./controller/privateChat.controller');
 
 server = app.listen(4000)
 const socket = require('socket.io')
@@ -30,6 +31,7 @@ io.on('connection', (socket) => {
     console.log("New connection");
 
     userController(app, socket);
+    privateChatController(app, io);
     
     // socket.on('SEND_MESSAGE', function(data){
     //     console.log("got a message");
