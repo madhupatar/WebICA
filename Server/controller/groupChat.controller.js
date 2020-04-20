@@ -1,67 +1,32 @@
-const messageDao = require('../daos/messageDao');
-const conversationDao = require("../daos/conversationDao");
+const groupDao = require("../daos/groupDao")
 
 module.exports = function(app, socket) {
-    app.get("/users/:userName/conversations", (req, res) => {
-        conversationDao.findAllConvByUserName(req.params.userName)
-        .then(conv => res.json(conv))
-        .catch(() => res.status(400).send("Failed"))
+    app.get("/conversations/group/:id", (req, res) => {
+        groupDao.getGroupById(req.params.id)
+        .then(groupInfo => res.json(groupInfo))
+        .catch(() => res.status(404).send("Failed"))
     })
 
-    app.get("/conversations/:id/messages", (req, res) => {
-        messageDao.getMessageByConversationId(req.params.id)
-        .then(msgs => res.json(msgs))
-        .catch(() => res.status(400).send("Failed"))
-    })
-
-    app.post("/conversations", (req, res) => {
-        const convInfo = {
-            message: [],
-            fromUser: req.body.fromUser,
-            toUser: req.body.toUser,
-            convoType: req.body.convoType
-        };
-        console.log("convInfo")
-        console.log(convInfo)
-        conversationDao.createConvBtwTwoUsers(convInfo)
-        .then((conv) => res.json(conv))
-        .catch(() => res.status(400).send("Failed"))
-    })
-
-    app.put("/conversations/:id/messages", (req, res) => {
-        const convId = req.params.id;
-
-        messageDao.createMessage(req.body.message)
-        .then((msg) => conversationDao.updateMessageListInConversation(convId, msg._id))
-        .then(() => {
-            res.send("Success")
-            // socket.emit('NEW_MESSAGE', req.body.message)
-        })
-        .catch(() => res.status(400).send("Failed"))
-    })
-
-    app.put("/messages/:id", (req, res) => {
-        const messageInfo = {
-            _id: req.params.id,
-            fromUser: req.body.fromUser,
-            toUser:req.body.userName,
-            content: req.body.content,
-            time: Date.now()
+    app.post("/conversations/group/", (req, res) => {
+        const groupObj = {
+            moderator: req.body.moderator,
+            userList: req.body.userList,
+            name: req.body.name
         }
-        messageDao.editMessage(_id, messageInfo)
-        .then(() => res.send("Message updated successfully"))
-        .catch(() => res.status(400).send("Failed to edit the message"))
+        groupDao.createGroup(groupObj)
+        .then(groupInfo => res.json(groupInfo))
+        .catch(() => res.status(404).send("Failed"))
     })
 
-    app.delete("/messages/:id", (req, res) => {
-        const msgId = messageDao.getMessageById(req.params.msgId)
-        messageDao.deleteMessage(msgId)
-        .then(() => conversationDao.findConvById(req.header.conversationId))
-        .then((conv) => {
-            let i = conv.listOfMsgs.indexOf(msgId)
-            conv.listOfMsgs.splice(i, 1)
-            res.json(conv)
-        })
-        .catch(() => res.status(400).send("Failed to delete the message")) 
+    app.put("/conversations/group/:id", (req, res) => {
+        const groupObj = {
+            _id: req.params.id,
+            moderator: req.body.moderator,
+            userList: req.body.userList,
+            name: req.body.name
+        }
+        groupDao.updateGroup(groupObj)
+        .then(groupInfo => res.json(groupInfo))
+        .catch(() => res.status(404).send("Failed"))
     })
 }

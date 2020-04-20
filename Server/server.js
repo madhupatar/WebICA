@@ -18,20 +18,20 @@ app.use(function (req, res, next) {
     next();
 });
 
-// Require all controllers here
 const userController = require('./controller/user.controller')
 const privateChatController = require('./controller/privateChat.controller');
+const groupController = require("./controller/groupChat.controller")
 
 server = app.listen(4000)
 const socket = require('socket.io')
 io = socket(server)
 
-// Sample echo logic with socket on the server
 io.on('connection', (socket) => {
     console.log("New connection");
 
-    userController(app, socket);
+    userController(app, io);
     privateChatController(app, io);
+    groupController(app, io);
     
     // socket.on('SEND_MESSAGE', function(data){
     //     console.log("got a message");

@@ -1,10 +1,31 @@
 const messageDao = require('../daos/messageDao');
 const conversationDao = require("../daos/conversationDao");
+const groupDao = require("../daos/groupDao");
 
 module.exports = function(app, socket) {
     app.get("/users/:userName/conversations", (req, res) => {
         conversationDao.findAllConvByUserName(req.params.userName)
-        .then(conv => res.json(conv))
+        .then(async conv => {
+            let newConversation = conv.map(async conversation => {
+                const newConv = {
+                    _id: conversation._id,
+                    fromUser: conversation.fromUser,
+                    groupId: conversation.groupId,
+                    message: conversation.message,
+                    convoType: conversation.convoType
+                }
+
+                if (conversation.convoType == "Group") {
+                    let groupInfo = await groupDao.getGroupById(conversation.groupId);
+                    newConv.groupName = groupInfo.name
+                }
+
+                return newConv
+            })
+
+            return await Promise.all(newConversation)
+        })
+        .then(val => res.json(val))
         .catch(() => res.status(400).send("Failed"))
     })
 
@@ -16,7 +37,31 @@ module.exports = function(app, socket) {
 
     app.get("/conversations", (req, res) => {
         conversationDao.findAllConversations()
-        .then(conv => res.json(conv))
+        .then(async conv => {
+            let newConversation = conv.map(async conversation => {
+                const newConv = {
+                    _id: conversation._id,
+                    fromUser: conversation.fromUser,
+                    groupId: conversation.groupId,
+                    message: conversation.message,
+                    convoType: conversation.convoType
+                }
+
+                if (conversation.convoType == "Group") {
+                    let groupInfo = await groupDao.getGroupById(conversation.groupId);
+                    newConv.groupName = groupInfo.name
+                }
+
+                return newConv
+            })
+            
+            // console.log(newConversation)
+            return await Promise.all(newConversation)
+        })
+        .then(val => {
+            // console.log(val)
+            res.json(val)
+        })
         .catch(() => res.status(400).send("Failed"))
     })
 
@@ -24,9 +69,16 @@ module.exports = function(app, socket) {
         const convInfo = {
             message: [],
             fromUser: req.body.fromUser,
-            toUser: req.body.toUser,
             convoType: req.body.convoType
         };
+
+        if (req.body.convoType === "Group") {
+            convInfo.groupId = req.body.groupId
+            convInfo.toUser = ""
+        }
+        else
+            convInfo.toUser = req.body.toUser
+        
         console.log("convInfo")
         console.log(convInfo)
         conversationDao.createConvBtwTwoUsers(convInfo)
