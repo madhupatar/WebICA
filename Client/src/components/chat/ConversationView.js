@@ -37,11 +37,7 @@ class ConversationView extends React.Component {
   componentDidMount() {
     this.props.onRef(this);
   }
-
-  componentWillUnmount() {
-    this.props.onRef(undefined);
-  }
-
+  
   hasMessages = () => {
     return (this.props.selectedChatId !== "" && this.state.messageList.length > 0)
   }

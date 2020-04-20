@@ -37,7 +37,7 @@ export default class ChatComponent extends React.Component {
       let tempChatArr = res.map((convObj) => {
         return {
           chatId: convObj._id,
-          chatName: convObj.convoType === "Group" ? convObj.groupName : convObj.toUser,
+          chatName: convObj.convoType === "Group" ? convObj.groupName : convObj.toUser === sessionMgmt.getUserName() ? convObj.fromUser : convObj.toUser,
           profileImg:
             "https://lh5.googleusercontent.com/-8Cn6iryzXOs/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3rcQA3W99z1gUxEWhpuL7zHf3GiwYA/photo.jpg",
           convoType: convObj.convoType,
@@ -45,8 +45,6 @@ export default class ChatComponent extends React.Component {
           groupId: convObj.groupId
         }
       })
-      console.log("tempChatArr")
-      console.log(res)
       self.setState({chatsList: tempChatArr})
       if (!this.conversationRef.hasMessages() && this.props.chatId !== "") {
         let currentObj = self.state.chatsList.find(element => element.chatId === this.props.chatId)
@@ -99,7 +97,7 @@ export default class ChatComponent extends React.Component {
     .then((res) => res.json())
   }
 
-  addMessageToState(message) {
+  addMessageToState = (message) => {
     this.updateChatList(message);
     this.conversationRef.addNewMessage(message);
   }

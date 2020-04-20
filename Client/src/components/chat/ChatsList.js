@@ -14,10 +14,6 @@ class ChatsList extends React.Component {
     this.props.onRef(this);
   }
 
-  componentWillUnmount() {
-    this.props.onRef(undefined);
-  }
-
   markMessageAsRead = (chatId) => {
     let modifiedChatArray = this.props.chatArr;
     modifiedChatArray.forEach((element) => {
