@@ -32,7 +32,7 @@ class App extends React.Component {
             path="/createConversation"
             component={CreateConversation}
           />
-          <Route exact path="/groupInfo/:groupName" component={GroupInfo} />
+          <Route exact path="/groupInfo/:groupId" component={GroupInfo} />
           <Route
             exact
             path="/conversation/:chatType/:chatId"

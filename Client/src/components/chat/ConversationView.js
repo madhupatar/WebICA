@@ -18,6 +18,7 @@ class ConversationView extends React.Component {
     super(props);
 
     this.state = {
+      groupInfo: null,
       chatInfo: {},
       editMessageObj: null,
       messageList: [],
@@ -45,8 +46,8 @@ class ConversationView extends React.Component {
     return (this.props.selectedChatId !== "" && this.state.messageList.length > 0)
   }
 
-  messagesFetched = (messageList, chatObj) => {
-    this.setState({messageList: messageList, chatInfo: chatObj})
+  messagesFetched = (messageList, chatObj, groupInfo) => {
+    this.setState({messageList: messageList, chatInfo: chatObj, groupInfo: groupInfo})
   }
 
   addNewMessage = (newMessage) => {
@@ -73,10 +74,10 @@ class ConversationView extends React.Component {
 
   showGroupDetails() {
     if (
-      (this.state.chatInfo.moderator === sessionMgmt.getUserName() ||
+      ((this.state.groupInfo !== null && this.state.groupInfo.moderator === sessionMgmt.getUserName()) ||
       sessionMgmt.getUserRole() === "Admin") && (this.props.selectedChatType === "Group")
     ) {
-      history.push("/groupInfo/" + this.state.chatInfo.chatId);
+      history.push("/groupInfo/" + this.state.groupInfo._id);
     }
   }
 
@@ -160,8 +161,7 @@ class ConversationView extends React.Component {
               : "other-user"
           }
         >
-          {currentChat.moderator === sessionMgmt.getUserName() ||
-          sessionMgmt.getUserRole() === "Admin" ? (
+          {sessionMgmt.getUserRole() === "Admin" ? (
             <div>
               <img
                 class="deleteMessage"

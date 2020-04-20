@@ -60,7 +60,7 @@ export default class MainLogin extends Component {
                 .then(resp => resp.json())
                 .then(resp => {
                     sessionMgmt.loginUser(data.userName, resp[0])
-                    if (sessionMgmt.getUserRole() == "Admin") {
+                    if (sessionMgmt.getUserRole() === "Admin") {
                         history.push("/adminHome")
                     }
                     else {
@@ -79,7 +79,7 @@ export default class MainLogin extends Component {
                     .then(resp => resp.json())
                     .then(resp => {
                         sessionMgmt.loginUser(data.userName, resp)
-                        if (sessionMgmt.getUserRole() == "Admin") {
+                        if (sessionMgmt.getUserRole() === "Admin") {
                             history.push("/adminHome")
                         }
                         else {

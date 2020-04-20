@@ -36,7 +36,7 @@ export default class AdminHomePage extends Component {
         }
       })
       .then((res) => {
-        let convObj = self.state.coversationObj.find( element => element._id == conversatonId)
+        let convObj = self.state.coversationObj.find( element => element._id === conversatonId)
         let indexOfConv = self.state.coversationObj.indexOf(convObj);
         let convArray = self.state.coversationObj;
         convArray.splice(indexOfConv, 1);

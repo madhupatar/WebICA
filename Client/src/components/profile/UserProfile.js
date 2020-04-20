@@ -101,8 +101,6 @@ export default class UserProfile extends Component {
         const isOwner = sessionMgmt.getUserName() === this.props.match.params.userName;
         const followingList = this.state.following.map((val) => <span>{val}</span>)
         var self = this;
-        console.log(this.props.match.params.userName)
-        console.log(isOwner)
         return (
             <div className="user-profile-container">
                 {
