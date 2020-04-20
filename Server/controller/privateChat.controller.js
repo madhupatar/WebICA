@@ -34,6 +34,12 @@ module.exports = function(app, socket) {
         .catch(() => res.status(400).send("Failed"))
     })
 
+    app.delete("/conversations/:id", (req, res) => {
+        conversationDao.deleteConversationById(req.params.id)
+        .then(() => res.send("Success"))
+        .catch(() => res.status(404).send("Failed"))
+    })
+
     app.put("/conversations/:id/messages", (req, res) => {
         const convId = req.params.id;
 
@@ -56,12 +62,11 @@ module.exports = function(app, socket) {
         const messageInfo = {
             _id: req.params.id,
             fromUser: req.body.fromUser,
-            toUser:req.body.userName,
             content: req.body.content,
             conversationId: req.body.conversationId,
             time: req.body.time
         }
-        messageDao.editMessage(_id, messageInfo)
+        messageDao.editMessage(messageInfo._id, messageInfo)
         .then(() => res.send("Message updated successfully"))
         .catch(() => res.status(400).send("Failed to edit the message"))
     })

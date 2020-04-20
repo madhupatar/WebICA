@@ -29,4 +29,6 @@ updateConversation = (conversationInfo) => {
     return convModel.update({_id: conversationInfo._id}, {$set:{message: conversationInfo.message, fromUser: conversationInfo.fromUser, toUser: conversationInfo.toUser, convoType: conversationInfo.convoType}})
 }
 
-module.exports = {findConvBtwTwoUsers, findAllConvByUserName, createConvBtwTwoUsers, findConvById, updateMessageListInConversation, findAllConversations, updateConversation}
+deleteConversationById = (convId) => {return convModel.deleteOne({_id: convId})}
+
+module.exports = {findConvBtwTwoUsers, findAllConvByUserName, createConvBtwTwoUsers, findConvById, updateMessageListInConversation, findAllConversations, updateConversation, deleteConversationById}
