@@ -1,138 +1,30 @@
-const messageDao = require('../daos/messageDao');
-const conversationDao = require("../daos/conversationDao");
-const groupDao = require("../daos/groupDao");
+const privateChatDao = require("../daos/privateChatDao")
 
 module.exports = function(app, socket) {
-    app.get("/users/:userName/conversations", (req, res) => {
-        conversationDao.findAllConvByUserName(req.params.userName)
-        .then(async conv => {
-            let newConversation = conv.map(async conversation => {
-                const newConv = {
-                    _id: conversation._id,
-                    fromUser: conversation.fromUser,
-                    groupId: conversation.groupId,
-                    message: conversation.message,
-                    convoType: conversation.convoType
-                }
-
-                if (conversation.convoType == "Group") {
-                    let groupInfo = await groupDao.getGroupById(conversation.groupId);
-                    newConv.groupName = groupInfo.name
-                }
-
-                return newConv
-            })
-
-            return await Promise.all(newConversation)
-        })
-        .then(val => res.json(val))
-        .catch(() => res.status(400).send("Failed"))
-    })
-
-    app.get("/conversations/:id/messages", (req, res) => {
-        messageDao.getMessageByConversationId(req.params.id)
-        .then(msgs => res.json(msgs))
-        .catch(() => res.status(400).send("Failed"))
-    })
-
-    app.get("/conversations", (req, res) => {
-        conversationDao.findAllConversations()
-        .then(async conv => {
-            let newConversation = conv.map(async conversation => {
-                const newConv = {
-                    _id: conversation._id,
-                    fromUser: conversation.fromUser,
-                    groupId: conversation.groupId,
-                    message: conversation.message,
-                    convoType: conversation.convoType
-                }
-
-                if (conversation.convoType == "Group") {
-                    let groupInfo = await groupDao.getGroupById(conversation.groupId);
-                    newConv.groupName = groupInfo.name
-                }
-
-                return newConv
-            })
-            
-            // console.log(newConversation)
-            return await Promise.all(newConversation)
-        })
-        .then(val => {
-            // console.log(val)
-            res.json(val)
-        })
-        .catch(() => res.status(400).send("Failed"))
-    })
-
-    app.post("/conversations", (req, res) => {
-        const convInfo = {
-            message: [],
-            fromUser: req.body.fromUser,
-            convoType: req.body.convoType
-        };
-
-        if (req.body.convoType === "Group") {
-            convInfo.groupId = req.body.groupId
-            convInfo.toUser = ""
-        }
-        else
-            convInfo.toUser = req.body.toUser
-        
-        console.log("convInfo")
-        console.log(convInfo)
-        conversationDao.createConvBtwTwoUsers(convInfo)
-        .then((conv) => res.json(conv))
-        .catch(() => res.status(400).send("Failed"))
-    })
-
-    app.delete("/conversations/:id", (req, res) => {
-        conversationDao.deleteConversationById(req.params.id)
-        .then(() => res.send("Success"))
+    app.get("/conversations/individual/:id", (req, res) => {
+        privateChatDao.getPrivateChatById(req.params.id)
+        .then(privateChatInfo => res.json(privateChatInfo))
         .catch(() => res.status(404).send("Failed"))
     })
 
-    app.put("/conversations/:id/messages", (req, res) => {
-        const convId = req.params.id;
-
-        messageDao.createMessage(req.body.message)
-        .then((msg) => conversationDao.updateMessageListInConversation(convId, msg._id))
-        .then(() => {
-            socket.emit('NEW_MESSAGE', req.body.message)
-            res.send("Success")
-        })
-        .catch(() => res.status(400).send("Failed"))
+    app.post("/conversations/individual", (req, res) => {
+        const privateChatObj = {
+            fromUser: req.body.fromUser,
+            toUser: req.body.toUser
+        }
+        privateChatDao.createPrivateChat(privateChatObj)
+        .then(privateChatInfo => res.json(privateChatInfo))
+        .catch(() => res.status(404).send("Failed"))
     })
 
-    app.get("/messages/:id", (req, res) => {
-        messageDao.getMessageById(req.params.id)
-        .then((msg) => res.json(msg))
-        .catch(() => res.status(400).send("Failed"))
-    })
-
-    app.put("/messages/:id", (req, res) => {
-        const messageInfo = {
+    app.put("/conversations/individual/:id", (req, res) => {
+        const privateChatObj = {
             _id: req.params.id,
             fromUser: req.body.fromUser,
-            content: req.body.content,
-            conversationId: req.body.conversationId,
-            time: req.body.time
+            toUser: req.body.toUser
         }
-        messageDao.editMessage(messageInfo._id, messageInfo)
-        .then(() => res.send("Message updated successfully"))
-        .catch(() => res.status(400).send("Failed to edit the message"))
-    })
-
-    app.delete("/messages/:id", (req, res) => {
-        messageDao.deleteMessage(req.params.id)
-        .then(() => conversationDao.findConvById(req.headers.conversationId))
-        .then((conv) => {
-            let i = conv.message.indexOf(msgId)
-            conv.message.splice(i, 1)
-            conversationDao.updateConversation(conv)
-            .then(() => res.send("success"))
-            .catch(() => res.status(400).send("Failed to delete the message from conversation"))
-        })
-        .catch(() => res.status(400).send("Failed to delete the message")) 
+        privateChatDao.updatePrivateChat(privateChatObj)
+        .then(privateChatInfo => res.json(privateChatInfo))
+        .catch(() => res.status(404).send("Failed"))
     })
 }

@@ -21,6 +21,8 @@ app.use(function (req, res, next) {
 const userController = require('./controller/user.controller')
 const privateChatController = require('./controller/privateChat.controller');
 const groupController = require("./controller/groupChat.controller")
+const conversationController = require("./controller/conversation.controller")
+const messageController = require("./controller/message.controller");
 
 server = app.listen(4000)
 const socket = require('socket.io')
@@ -30,6 +32,8 @@ io.on('connection', (socket) => {
     console.log("New connection");
 
     userController(app, io);
+    messageController(app, io);
+    conversationController(app, io);
     privateChatController(app, io);
     groupController(app, io);
     
