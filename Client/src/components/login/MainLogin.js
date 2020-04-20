@@ -60,7 +60,12 @@ export default class MainLogin extends Component {
                 .then(resp => resp.json())
                 .then(resp => {
                     sessionMgmt.loginUser(data.userName, resp[0])
-                    history.push("/")
+                    if (sessionMgmt.getUserRole() == "Admin") {
+                        history.push("/adminHome")
+                    }
+                    else {
+                        history.push("/")
+                    }
                 })
                 .catch(() => {
                     fetch('http://localhost:4000/users', {
@@ -74,7 +79,12 @@ export default class MainLogin extends Component {
                     .then(resp => resp.json())
                     .then(resp => {
                         sessionMgmt.loginUser(data.userName, resp)
-                        history.push("/")
+                        if (sessionMgmt.getUserRole() == "Admin") {
+                            history.push("/adminHome")
+                        }
+                        else {
+                            history.push("/")
+                        }
                     })
                 })
             },

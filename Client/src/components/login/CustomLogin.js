@@ -44,7 +44,12 @@ export default class CustomLogin extends React.Component {
                     .then(resp => resp.json())
                     .then(resp => {
                         sessionMgmt.loginUser(resp[0].userName, resp[0])
-                        history.push("/")
+                        if (sessionMgmt.getUserRole() == "Admin") {
+                            history.push("/adminHome")
+                        }
+                        else {
+                            history.push("/")
+                        }
                     })
                     .catch(() => self.setState({showAlert: true}))
        }

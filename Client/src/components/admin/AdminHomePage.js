@@ -14,7 +14,16 @@ export default class AdminHomePage extends Component {
     }
 
     componentDidMount() {
-        // api call to get all the conversations for all users and setState
+        let self = this
+        fetch('http://localhost:4000/conversations/', {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        }
+      })
+      .then((res) => res.json())
+      .then((res) => self.setState({coversationObj: res}))
     }
 
     deleteConversation = (conversatonId) => {
@@ -25,12 +34,12 @@ export default class AdminHomePage extends Component {
         const content = this.state.coversationObj.map(convObj => 
             <tr>
                 <td>{convObj._id}</td>
-                <td>{convObj.from}</td>
-                <td>{convObj.to}</td>
-                <td>{convObj.conversationType}</td>
+                <td>{convObj.fromUser}</td>
+                <td>{convObj.toUser}</td>
+                <td>{convObj.convoType}</td>
                 <td>
                     <Button variant="primary" onClick={() => this.deleteConversation(convObj._id)}>Delete</Button>
-                    <Button variant="primary" onClick={() => history.push("/conversation/" + convObj.to)}>Open</Button>
+                    <Button variant="primary" onClick={() => history.push("/conversation/" + convObj.convoType + "/" + convObj._id)}>Open</Button>
                     {
                         convObj.conversationType === "group" ? <Button variant="primary" onClick={() => history.push("/groupInfo/" + convObj.to)}>Edit Group Info</Button> : null
                     }

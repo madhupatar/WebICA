@@ -9,7 +9,7 @@ class ChatCard extends React.Component {
   }
 
   clickHandler() {
-    this.props.onClick(this.props.userName);
+    this.props.onClick(this.props.chatType, this.props.chatId);
   }
 
   render() {
@@ -33,7 +33,7 @@ class ChatCard extends React.Component {
               "user-full-name" + (this.props.readAllMessages ? "" : " bold")
             }
           >
-            {this.props.userName}
+            {this.props.chatName}
           </div>
           <br></br>
           <div
