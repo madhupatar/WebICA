@@ -20,16 +20,32 @@ export default class CreateConversation extends Component {
     createConversation = () => {
         let self = this
         if (!this.isGroup.checked) {
-            fetch('http://localhost:4000/conversations/', {
+            fetch('http://localhost:4000/conversations/individual', {
                 method: "POST",
                 headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-            },
-                body: JSON.stringify({fromUser: this.user1Text.value, toUser: this.user2Text.value, convoType: "Individual"})
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({fromUser: this.user1Text.value, toUser: this.user2Text.value})
             })
+            .then(res => res.json())
             .then((res) => {
-                history.push("/adminHome");
+                const convObj = {
+                    message: [],
+                    convoType: "Individual",
+                    privateChatId: res._id
+                }
+
+                fetch('http://localhost:4000/conversations', {
+                    method: "POST",
+                    headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(convObj)
+                })
+                .then((res) => res.json())
+                .then((res) => history.push("/adminHome"))
             })
         }
         else {

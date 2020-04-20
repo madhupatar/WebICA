@@ -28,22 +28,38 @@ export default class SearchComponent extends Component {
   }
 
   fetchChatDetails = (toUserName) => {
-    const convObj = {
-      message: [],
+    const privateChatObj = {
       fromUser: sessionMgmt.getUserName(),
       toUser: toUserName
     }
 
-    fetch('http://localhost:4000/conversations', {
+    fetch('http://localhost:4000/conversations/individual', {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(convObj)
+      body: JSON.stringify(privateChatObj)
     })
-    .then((res) => res.json())
-    .then((res) => history.push("/conversation/Individual/" + res._id))
+    .then(res => res.json())
+    .then((res) => {
+      const convObj = {
+        message: [],
+        convoType: "Individual",
+        privateChatId: res._id
+      }
+
+      fetch('http://localhost:4000/conversations', {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(convObj)
+      })
+      .then((res) => res.json())
+      .then((res) => history.push("/conversation/Individual/" + res._id))
+    })
   };
 
   render() {
