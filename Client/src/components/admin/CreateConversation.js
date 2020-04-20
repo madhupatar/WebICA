@@ -3,8 +3,33 @@ import {Container, Form, FormGroup, FormLabel, FormControl, Button, FormText} fr
 import history from "../../services/History";
 
 export default class CreateConversation extends Component {
+
+    constructor(props) {
+        super(props);
+        this.user1Text = React.createRef();
+        this.user2Text = React.createRef();
+        this.isGroup = React.createRef();
+    }
+
     createConversation = () => {
-        // api call to create a conversation
+
+        if (!this.isGroup.checked) {
+            fetch('http://localhost:4000/conversations/', {
+                method: "POST",
+                headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+                body: JSON.stringify({fromUser: this.user1Text.value, toUser: this.user2Text.value, convoType: "Individual"})
+            })
+            .then((res) => res.json())
+        }
+        else {
+            // message: [],
+            // fromUser: req.body.fromUser,
+            // toUser: req.body.toUser,
+            // convoType: req.body.convoType
+        }
         history.push("/adminHome");
     }
 
@@ -14,17 +39,17 @@ export default class CreateConversation extends Component {
                 <Form>
                     <FormGroup controlId="username 1">
                         <FormLabel>Conversation User 1</FormLabel>
-                        <FormControl type="email" placeholder="Enter user name 1" />
+                        <FormControl ref={ref => {this.user1Text = ref;}} type="email" placeholder="Enter user name 1" />
                         <FormText className="text-muted">
                             In case of this conversation being a group, this user would be considered moderator.
                         </FormText>
                     </FormGroup>
                     <FormGroup controlId="username 2">
                         <FormLabel>Conversation User 2</FormLabel>
-                        <FormControl type="email" placeholder="Enter user name 2" />
+                        <FormControl ref={ref => {this.user2Text = ref;}} type="email" placeholder="Enter user name 2" />
                     </FormGroup>
                     <Form.Group controlId="isGroup">
-                        <Form.Check type="checkbox" label="Is it group"/>
+                        <Form.Check ref={ref => {this.isGroup = ref;}} type="checkbox" label="Is it group"/>
                     </Form.Group>
                     <Button variant="primary" onClick={this.createConversation}>Create</Button>
                 </Form>

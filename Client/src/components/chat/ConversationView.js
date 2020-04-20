@@ -19,7 +19,7 @@ class ConversationView extends React.Component {
 
     this.state = {
       chatInfo: {},
-      editMessageId: "",
+      editMessageObj: null,
       messageList: [],
     };
 
@@ -60,11 +60,11 @@ class ConversationView extends React.Component {
     const newMessage = {
       content: this.msgRef.current.value,
       fromUser: sessionMgmt.getUserName(),
-      toUser: this.props.selectedChatType === "Individual" ? this.state.chatInfo.chatName : "",
       time: Date.now(),
       conversationId: this.props.selectedChatId
     };
     this.props.sendMessage(newMessage);
+    this.msgRef.current.value = ""
   }
 
   getGroupDetails(chatId, chatType) {
@@ -81,7 +81,7 @@ class ConversationView extends React.Component {
   }
 
   handleDelete(message) {
-    console.log(message)
+    let self = this
     fetch('http://localhost:4000/messages/' + message._id, {
       method: "DELETE",
       headers: {
@@ -90,21 +90,51 @@ class ConversationView extends React.Component {
         "conversationId": message.conversationId
       }
     })
-    .then((res) => res.json())
+    .then((res) => {
+      let indexOfMessage = self.state.messageList.indexOf(message);
+      let messageArray = self.state.messageList;
+      messageArray.splice(indexOfMessage, 1);
+      self.setState({messageList: messageArray})
+    })
+    
   }
 
-  handleEdit(messageId) {
-    this.setState({ editMessageId: messageId });
-    //Call edit API
+  handleEdit(messageObj) {
+    this.setState({ editMessageObj: messageObj });
   }
 
   sendUpdatedMessage() {
-    //Call update message API
+    let self = this
+    const newMessage = {
+      _id: this.state.editMessageObj._id,
+      fromUser: this.state.editMessageObj.fromUser,
+      content: this.msgRef.current.value,
+      conversationId: this.state.editMessageObj.conversationId,
+      time: this.state.editMessageObj.time
+    };
+    fetch('http://localhost:4000/messages/' + newMessage._id, {
+        method: "PUT",
+        headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newMessage)
+    })
+    .then((res) => {
+      let messageList = self.state.messageList
+      messageList.forEach(element => {
+        if (element._id == newMessage._id) {
+          element.content = newMessage.content;
+        }
+      })
+      self.msgRef.current.value = ""
+      self.setState({messageList: messageList, editMessageObj: null})
+      return res.json()
+    })
   }
 
   cancelEditMessage() {
-    this.setState({ editMessageId: "" });
-    //Call edit API
+    this.setState({ editMessageObj: null });
   }
 
   getCurrentChatInfo = () => {
@@ -146,7 +176,7 @@ class ConversationView extends React.Component {
                 src={editImg}
                 alt=""
                 onClick={() =>
-                  this.handleEdit(this.state.messageList[i].messageId)
+                  this.handleEdit(this.state.messageList[i])
                 }
               />
             </div>
@@ -174,7 +204,7 @@ class ConversationView extends React.Component {
             placeholder="Enter message"
             ref={this.msgRef}
           />
-          {this.state.editMessageId === "" ? (
+          {this.state.editMessageObj === null ? (
             <Button
               className="btn btn-primary ml-4"
               variant="primary"

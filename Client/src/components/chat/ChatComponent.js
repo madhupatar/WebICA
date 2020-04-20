@@ -44,9 +44,6 @@ export default class ChatComponent extends React.Component {
           readAllMessages: true, // TODO
         }
       })
-      console.log(tempChatArr)
-      console.log("tempChatArr")
-      console.log(res)
       self.setState({chatsList: tempChatArr})
       if (!this.conversationRef.hasMessages()) {
         let self = this

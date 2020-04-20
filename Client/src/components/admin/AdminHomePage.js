@@ -27,7 +27,21 @@ export default class AdminHomePage extends Component {
     }
 
     deleteConversation = (conversatonId) => {
-        // api call to delete conversation based on id
+        let self = this
+        fetch('http://localhost:4000/conversations/' + conversatonId, {
+        method: "DELETE",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        }
+      })
+      .then((res) => {
+        let convObj = self.state.coversationObj.find( element => element._id == conversatonId)
+        let indexOfConv = self.state.coversationObj.indexOf(convObj);
+        let convArray = self.state.coversationObj;
+        convArray.splice(indexOfConv, 1);
+        self.setState({coversationObj: convArray})
+    })
     }
 
     render() {
