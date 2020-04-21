@@ -23,7 +23,7 @@ export default class GroupInfo extends Component {
 
   componentDidMount() {
     let self = this
-    fetch('https://cs5200-sp2020-server.herokuapp.com//conversations/group/' + this.props.match.params.groupId, {
+    fetch('https://cs5200-sp2020-server.herokuapp.com/conversations/group/' + this.props.match.params.groupId, {
       method: "GET",
       headers: {
         Accept: "application/json",
@@ -66,7 +66,7 @@ export default class GroupInfo extends Component {
 
   updateGroup = (groupObj) => {
     let self = this
-    fetch('https://cs5200-sp2020-server.herokuapp.com//conversations/group/' + this.props.match.params.groupId, {
+    fetch('https://cs5200-sp2020-server.herokuapp.com/conversations/group/' + this.props.match.params.groupId, {
       method: "PUT",
       headers: {
         Accept: "application/json",

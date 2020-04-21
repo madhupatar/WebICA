@@ -27,7 +27,7 @@ export default class Registration extends Component {
         newuser.password = this.passwordRef.current.value;
         newuser.userType = this.state.userType;
 
-        fetch('https://cs5200-sp2020-server.herokuapp.com//users', {
+        fetch('https://cs5200-sp2020-server.herokuapp.com/users', {
             method: 'POST',
             headers: {
             'Accept': 'application/json',

@@ -79,7 +79,7 @@ class ConversationView extends React.Component {
 
   handleDelete(message) {
     let self = this
-    fetch('https://cs5200-sp2020-server.herokuapp.com//messages/' + message._id, {
+    fetch('https://cs5200-sp2020-server.herokuapp.com/messages/' + message._id, {
       method: "DELETE",
       headers: {
         Accept: "application/json",
@@ -109,7 +109,7 @@ class ConversationView extends React.Component {
       conversationId: this.state.editMessageObj.conversationId,
       time: this.state.editMessageObj.time
     };
-    fetch('https://cs5200-sp2020-server.herokuapp.com//messages/' + newMessage._id, {
+    fetch('https://cs5200-sp2020-server.herokuapp.com/messages/' + newMessage._id, {
         method: "PUT",
         headers: {
         Accept: "application/json",

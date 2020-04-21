@@ -20,7 +20,7 @@ export default class CreateConversation extends Component {
     createConversation = () => {
         let self = this
         if (!this.isGroup.checked) {
-            fetch('https://cs5200-sp2020-server.herokuapp.com//conversations/individual', {
+            fetch('https://cs5200-sp2020-server.herokuapp.com/conversations/individual', {
                 method: "POST",
                 headers: {
                     Accept: "application/json",
@@ -36,7 +36,7 @@ export default class CreateConversation extends Component {
                     privateChatId: res._id
                 }
 
-                fetch('https://cs5200-sp2020-server.herokuapp.com//conversations', {
+                fetch('https://cs5200-sp2020-server.herokuapp.com/conversations', {
                     method: "POST",
                     headers: {
                     Accept: "application/json",
@@ -49,7 +49,7 @@ export default class CreateConversation extends Component {
             })
         }
         else {
-            fetch('https://cs5200-sp2020-server.herokuapp.com//conversations/group', {
+            fetch('https://cs5200-sp2020-server.herokuapp.com/conversations/group', {
                 method: "POST",
                 headers: {
                 Accept: "application/json",
@@ -59,7 +59,7 @@ export default class CreateConversation extends Component {
             })
             .then((res) => res.json())
             .then((res) => {
-                fetch('https://cs5200-sp2020-server.herokuapp.com//conversations/', {
+                fetch('https://cs5200-sp2020-server.herokuapp.com/conversations/', {
                 method: "POST",
                 headers: {
                 Accept: "application/json",

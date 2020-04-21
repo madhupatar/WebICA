@@ -32,7 +32,7 @@ export default class CustomLogin extends React.Component {
             
 
             var self = this;
-            fetch('https://cs5200-sp2020-server.herokuapp.com//login', {
+            fetch('https://cs5200-sp2020-server.herokuapp.com/login', {
                         method: 'GET',
                         headers: {
                         'Accept': 'application/json',
