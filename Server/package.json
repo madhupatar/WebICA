@@ -1,8 +1,8 @@
 {
   "name": "cs5200-sp20-team18",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Express app to support server instance of the chat application",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -14,9 +14,7 @@
     "mongodb": "^3.3.5",
     "mongoose": "^5.8.0",
     "nodemon": "^2.0.3",
-    "socket.io": "^2.3.0"
-  },
-  "devDependencies": {
+    "socket.io": "^2.3.0",
     "cors": "^2.8.5"
   }
 }

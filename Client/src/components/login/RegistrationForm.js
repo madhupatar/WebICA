@@ -38,12 +38,7 @@ export default class Registration extends Component {
         .then(resp => resp.json())
         .then(resp => {
             sessionMgmt.loginUser(newuser.userName, resp)
-            if (sessionMgmt.getUserRole() === "Admin") {
-                history.push("/adminHome")
-            }
-            else {
-                history.push("/")
-            }
+            history.push("/adminHome")
         })
         .catch(() => self.setState({showAlert: true}));
     }

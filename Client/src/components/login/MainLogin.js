@@ -113,11 +113,6 @@ export default class MainLogin extends Component {
                     Login with Google
                     </u>
                 </button>
-                <button className="btn btn-link form-group" onClick={() => history.push("/register")}>
-                    <u>
-                    Sign up
-                    </u>
-                </button>
             </Container>
             // Render google login component here
         )

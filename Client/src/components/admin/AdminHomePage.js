@@ -9,7 +9,8 @@ export default class AdminHomePage extends Component {
         super(props);
 
         this.state = {
-            coversationObj: []
+            coversationObj: [],
+            userList: []
         }
     }
 
@@ -24,6 +25,16 @@ export default class AdminHomePage extends Component {
       })
       .then((res) => res.json())
       .then((res) => self.setState({coversationObj: res}))
+      
+        fetch('https://cs5200-sp2020-server.herokuapp.com/users/', {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        }
+      })
+      .then((res) => res.json())
+      .then((res) => self.setState({userList: res}))
     }
 
     deleteConversation = (conversatonId) => {
@@ -44,6 +55,24 @@ export default class AdminHomePage extends Component {
     })
     }
 
+    deleteUser = (userId) => {
+        let self = this;
+        fetch('https://cs5200-sp2020-server.herokuapp.com/users/' + userId, {
+        method: "DELETE",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        }
+      })
+      .then(res => {
+        let userObj = self.state.userList.find( element => element._id === userId)
+        let indexOfUser = self.state.userList.indexOf(userObj);
+        let userArr = self.state.userList;
+        userArr.splice(indexOfUser, 1);
+        self.setState({userList: userArr})
+      })
+    }
+
     render() {
         const content = this.state.coversationObj.map(convObj => 
             <tr>
@@ -61,6 +90,18 @@ export default class AdminHomePage extends Component {
             </tr>
         );
 
+        let filteredList = this.state.userList.filter(userObj => userObj.userName !== sessionMgmt.getUserName())
+        const userContent = filteredList.map(userObj => 
+            <tr>
+                <td>{userObj._id}</td>
+                <td>{userObj.firstName}</td>
+                <td>{userObj.lastName}</td>
+                <td>{userObj.userName}</td>
+                <td>
+                    <Button variant="primary" onClick={() => this.deleteUser(userObj._id)}>Delete User</Button>
+                </td>
+            </tr>
+        );
         return (
             <Container>
                 <TopBar userName={sessionMgmt.getUserName()} showSearch={true}/>
@@ -74,10 +115,24 @@ export default class AdminHomePage extends Component {
                             <th>From</th>
                             <th>To</th>
                             <th>Is a Group</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {content}
+                    </tbody>
+                </Table>
+                <Button variant="primary" onClick={() => history.push("/register")}>Create User</Button>
+                <Table striped bordered hove>
+                    <thead>
+                        <th>User Id</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>User Name</th>
+                        <th>Actions</th>
+                    </thead>
+                    <tbody>
+                        {userContent}
                     </tbody>
                 </Table>
             </Container>

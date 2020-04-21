@@ -3,18 +3,18 @@ const conversationDao = require("../daos/conversationDao");
 const groupDao = require("../daos/groupDao");
 const privateChatDao = require("../daos/privateChatDao");
 
-module.exports = function(app, socket) {
+module.exports = function(app, socket, userNameToSocketId) {
     app.get("/users/:userName/conversations", (req, res) => {
         conversationDao.findAllConversations()
         .then(async conv => {
             let newConversation = conv.map(async conversation => {
-                const newConv = {
+                let newConv = {
                     _id: conversation._id,
                     message: conversation.message,
                     convoType: conversation.convoType
                 }
 
-                if (conversation.convoType == "Group") {
+                if (conversation.convoType === "Group") {
                     let groupInfo = await groupDao.getGroupById(conversation.groupId);
                     if (groupInfo.userList.includes(req.params.userName) || groupInfo.moderator == req.params.userName) {
                         newConv.groupName = groupInfo.name
@@ -44,12 +44,42 @@ module.exports = function(app, socket) {
             const retVal = val.filter(values => values != null)
             res.json(retVal)
         })
-        .catch(() => res.status(400).send("Failed"))
+        .catch((error) => {
+            console.log(error)
+            res.status(400).send("Failed")
+        })
     })
 
     app.get("/conversations/:id/messages", (req, res) => {
         messageDao.getMessageByConversationId(req.params.id)
         .then(msgs => res.json(msgs))
+        .catch(() => res.status(400).send("Failed"))
+    })
+
+    app.get("/conversations/:id", (req, res) => {
+        conversationDao.findConvById(req.params.id)
+        .then(async conv => {
+            let newConv = {
+                _id: conv[0]._id,
+                message: conv[0].message,
+                convoType: conv[0].convoType
+            }
+
+            if (conv[0].convoType === "Group") {
+                let groupInfo = await groupDao.getGroupById(conv[0].groupId);
+                newConv.groupName = groupInfo.name
+                newConv.groupId = groupInfo._id
+            }
+
+            else {
+                let privateChatInfo = await privateChatDao.getPrivateChatById(conv[0].privateChatId);
+                newConv.fromUser = privateChatInfo.fromUser
+                newConv.toUser = privateChatInfo.toUser
+                newConv.privateChatId = privateChatInfo._id
+            }
+            return newConv
+        })
+        .then(conv => res.json(conv))
         .catch(() => res.status(400).send("Failed"))
     })
 
@@ -63,7 +93,7 @@ module.exports = function(app, socket) {
                     convoType: conversation.convoType
                 }
 
-                if (conversation.convoType == "Group") {
+                if (conversation.convoType === "Group") {
                     let groupInfo = await groupDao.getGroupById(conversation.groupId);
                     newConv.groupName = groupInfo.name
                     newConv.groupId = groupInfo._id
@@ -118,10 +148,23 @@ module.exports = function(app, socket) {
 
         messageDao.createMessage(req.body.message)
         .then((msg) => conversationDao.updateMessageListInConversation(convId, msg._id))
-        .then(() => {
-            socket.emit('NEW_MESSAGE', req.body.message)
-            res.send("Success")
+        .then(() => conversationDao.findConvById(convId))
+        .then(async conv => {
+            if (conv[0].convoType === "Group") {
+                console.log("Group chat found" + conv[0].groupId)
+                let groupInfo = await groupDao.getGroupById(conv[0].groupId)
+                groupInfo.userList.forEach(userName => {
+                    io.to(userNameToSocketId[userName]).emit('NEW_MESSAGE', req.body.message)
+                })
+                io.to(userNameToSocketId[groupInfo.moderator]).emit('NEW_MESSAGE', req.body.message)
+            }
+            else {
+                let privateInfo = await privateChatDao.getPrivateChatById(conv[0].privateChatId)
+                io.to(userNameToSocketId[privateInfo.toUser]).emit('NEW_MESSAGE', req.body.message)
+                io.to(userNameToSocketId[privateInfo.fromUser]).emit('NEW_MESSAGE', req.body.message)
+            }
         })
+        .then(() => res.send("Success"))
         .catch(() => res.status(400).send("Failed"))
     })
 }

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/chatApplication')
+mongoose.connect('mongodb://heroku_4p1h0rnq:94oqvg5cbir0mb6um96fh2ohah@ds249008.mlab.com:49008/heroku_4p1h0rnq')
 
 const express = require('express')
 const app = express()
@@ -24,22 +24,20 @@ const groupController = require("./controller/groupChat.controller")
 const conversationController = require("./controller/conversation.controller")
 const messageController = require("./controller/message.controller");
 
-server = app.listen(4000)
+server = app.listen(process.env.PORT || 4000)
 const socket = require('socket.io')
 io = socket(server)
 
+let userNameToSocketId = {}
+
 io.on('connection', (socket) => {
-    console.log("New connection");
+    socket.on("JOINING", (data) => {
+        userNameToSocketId[data] = socket.id
+        conversationController(app, io, userNameToSocketId);
+    })
 
     userController(app, io);
     messageController(app, io);
-    conversationController(app, io);
     privateChatController(app, io);
     groupController(app, io);
-    
-    // socket.on('SEND_MESSAGE', function(data){
-    //     console.log("got a message");
-    //     data.to = "User 2";
-    //     io.emit('RECEIVE_MESSAGE', data);
-    // })
 })

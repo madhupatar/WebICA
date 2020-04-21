@@ -62,4 +62,10 @@ module.exports = function(app, socket) {
         })
         .catch(() => res.status(400).send("Failed to find users"))
     })
+
+    app.delete("/users/:id", (req, res) => {
+        userDao.deleteUserById(req.params.id)
+        .then(() => res.send("Success"))
+        .catch(() => res.status(400).send("Failed to delete user"))
+    })
 }

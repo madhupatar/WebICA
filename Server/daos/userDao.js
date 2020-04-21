@@ -25,6 +25,8 @@ getUserByKeyword = (keyword) => {
     return userModel.find({userName: {$regex: ".*" + keyword + ".*"}})
 }
 
+deleteUserById = (id) => {return userModel.deleteOne({_id: id})}
+
 module.exports = {
-    findUserByUserName, createUser, findAllUsers, findUserByCredentials, updateUserDetails, getUserByKeyword
+    findUserByUserName, createUser, findAllUsers, findUserByCredentials, updateUserDetails, getUserByKeyword, deleteUserById
 }
