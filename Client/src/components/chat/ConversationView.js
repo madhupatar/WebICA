@@ -37,7 +37,7 @@ class ConversationView extends React.Component {
   componentDidMount() {
     this.props.onRef(this);
   }
-  
+
   hasMessages = () => {
     return (this.props.selectedChatId !== "" && this.state.messageList.length > 0)
   }
@@ -79,7 +79,7 @@ class ConversationView extends React.Component {
 
   handleDelete(message) {
     let self = this
-    fetch('http://localhost:4000/messages/' + message._id, {
+    fetch('https://cs5200-sp2020-server.herokuapp.com//messages/' + message._id, {
       method: "DELETE",
       headers: {
         Accept: "application/json",
@@ -109,7 +109,7 @@ class ConversationView extends React.Component {
       conversationId: this.state.editMessageObj.conversationId,
       time: this.state.editMessageObj.time
     };
-    fetch('http://localhost:4000/messages/' + newMessage._id, {
+    fetch('https://cs5200-sp2020-server.herokuapp.com//messages/' + newMessage._id, {
         method: "PUT",
         headers: {
         Accept: "application/json",

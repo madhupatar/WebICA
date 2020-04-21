@@ -50,7 +50,7 @@ export default class MainLogin extends Component {
                 data.userName = user_info.email;
 
                 // user profile information
-                fetch('http://localhost:4000/users/' + data.userName, {
+                fetch('https://cs5200-sp2020-server.herokuapp.com//users/' + data.userName, {
                     method: 'GET',
                     headers: {
                     'Accept': 'application/json',
@@ -68,7 +68,7 @@ export default class MainLogin extends Component {
                     }
                 })
                 .catch(() => {
-                    fetch('http://localhost:4000/users', {
+                    fetch('https://cs5200-sp2020-server.herokuapp.com//users', {
                         method: 'POST',
                         headers: {
                         'Accept': 'application/json',

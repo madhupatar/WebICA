@@ -4,7 +4,7 @@ var chatSocket = null;
 
 
 if (chatSocket === null)
-    chatSocket = io('localhost:4000');
+    chatSocket = io('https://cs5200-sp2020-server.herokuapp.com/');
 
 export function getSocket() {
     return chatSocket;

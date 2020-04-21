@@ -27,7 +27,7 @@ export default class UserProfile extends Component {
 
     componentDidMount() {
         let self = this;
-        fetch('http://localhost:4000/users/' + this.state.userName, {
+        fetch('https://cs5200-sp2020-server.herokuapp.com//users/' + this.state.userName, {
             method: 'GET',
             headers: {
             'Accept': 'application/json',
@@ -44,7 +44,7 @@ export default class UserProfile extends Component {
     updateBackend = () => {
         let self = this;
         const userInfo = (({ userName, firstName, lastName, following, userType }) => ({ userName, firstName, lastName, following, userType }))(this.state);
-        fetch('http://localhost:4000/users/' + this.state.userName, {
+        fetch('https://cs5200-sp2020-server.herokuapp.com//users/' + this.state.userName, {
             method: 'PUT',
             headers: {
             'Accept': 'application/json',
@@ -82,7 +82,7 @@ export default class UserProfile extends Component {
         const userInfo = {
             following: signedUserFollowingList
         }
-        fetch('http://localhost:4000/users/' + signedUserName, {
+        fetch('https://cs5200-sp2020-server.herokuapp.com//users/' + signedUserName, {
             method: 'PUT',
             headers: {
             'Accept': 'application/json',

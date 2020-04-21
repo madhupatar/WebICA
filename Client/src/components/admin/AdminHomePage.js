@@ -15,7 +15,7 @@ export default class AdminHomePage extends Component {
 
     componentDidMount() {
         let self = this
-        fetch('http://localhost:4000/conversations/', {
+        fetch('https://cs5200-sp2020-server.herokuapp.com//conversations/', {
         method: "GET",
         headers: {
           Accept: "application/json",
@@ -28,7 +28,7 @@ export default class AdminHomePage extends Component {
 
     deleteConversation = (conversatonId) => {
         let self = this
-        fetch('http://localhost:4000/conversations/' + conversatonId, {
+        fetch('https://cs5200-sp2020-server.herokuapp.com//conversations/' + conversatonId, {
         method: "DELETE",
         headers: {
           Accept: "application/json",

@@ -14,7 +14,7 @@ export default class SearchComponent extends Component {
 
   componentDidMount() {
     let self = this;
-    fetch("http://localhost:4000/search/" + this.props.match.params.keyword, {
+    fetch("https://cs5200-sp2020-server.herokuapp.com//search/" + this.props.match.params.keyword, {
       method: "GET",
       headers: {
         Accept: "application/json",
@@ -33,7 +33,7 @@ export default class SearchComponent extends Component {
       toUser: toUserName
     }
 
-    fetch('http://localhost:4000/conversations/individual', {
+    fetch('https://cs5200-sp2020-server.herokuapp.com//conversations/individual', {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -49,7 +49,7 @@ export default class SearchComponent extends Component {
         privateChatId: res._id
       }
 
-      fetch('http://localhost:4000/conversations', {
+      fetch('https://cs5200-sp2020-server.herokuapp.com//conversations', {
         method: "POST",
         headers: {
           Accept: "application/json",

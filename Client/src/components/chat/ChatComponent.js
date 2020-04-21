@@ -23,7 +23,7 @@ export default class ChatComponent extends React.Component {
 
   componentDidMount() {
     let self  = this;
-    let api = sessionMgmt.getUserRole() === "Admin" ? "http://localhost:4000/conversations/" : "http://localhost:4000/users/" + sessionMgmt.getUserName() + "/conversations"
+    let api = sessionMgmt.getUserRole() === "Admin" ? "https://cs5200-sp2020-server.herokuapp.com//conversations/" : "https://cs5200-sp2020-server.herokuapp.com//users/" + sessionMgmt.getUserName() + "/conversations"
     fetch(api, {
       method: "GET",
       headers: {
@@ -50,7 +50,7 @@ export default class ChatComponent extends React.Component {
         let currentObj = self.state.chatsList.find(element => element.chatId === this.props.chatId)
         
         if (currentObj.convoType === "Group") {
-          fetch('http://localhost:4000/conversations/group/' + currentObj.groupId, {
+          fetch('https://cs5200-sp2020-server.herokuapp.com//conversations/group/' + currentObj.groupId, {
             method: "GET",
             headers: {
               Accept: "application/json",
@@ -59,7 +59,7 @@ export default class ChatComponent extends React.Component {
           })
           .then((res) => res.json())
           .then((groupRes) => {
-            fetch('http://localhost:4000/conversations/' + this.props.chatId + '/messages', {
+            fetch('https://cs5200-sp2020-server.herokuapp.com//conversations/' + this.props.chatId + '/messages', {
             method: "GET",
             headers: {
               Accept: "application/json",
@@ -71,7 +71,7 @@ export default class ChatComponent extends React.Component {
           })
         }
         else {
-          fetch('http://localhost:4000/conversations/' + this.props.chatId + '/messages', {
+          fetch('https://cs5200-sp2020-server.herokuapp.com//conversations/' + this.props.chatId + '/messages', {
             method: "GET",
             headers: {
               Accept: "application/json",
@@ -86,7 +86,7 @@ export default class ChatComponent extends React.Component {
   }
 
   handleSend(message) {
-    fetch('http://localhost:4000/conversations/' + this.props.chatId + '/messages', {
+    fetch('https://cs5200-sp2020-server.herokuapp.com//conversations/' + this.props.chatId + '/messages', {
       method: "PUT",
       headers: {
         Accept: "application/json",
@@ -126,7 +126,7 @@ export default class ChatComponent extends React.Component {
     if (nextProps.chatId !== this.props.chatId && nextProps.chatId !== "") {
       let currentObj = self.state.chatsList.find(element => element.chatId === nextProps.chatId)
       if (currentObj.convoType === "Group") {
-        fetch('http://localhost:4000/conversations/group/' + currentObj.groupId, {
+        fetch('https://cs5200-sp2020-server.herokuapp.com//conversations/group/' + currentObj.groupId, {
           method: "GET",
           headers: {
             Accept: "application/json",
@@ -135,7 +135,7 @@ export default class ChatComponent extends React.Component {
         })
         .then((res) => res.json())
         .then((groupRes) => {
-          fetch('http://localhost:4000/conversations/' + nextProps.chatId + '/messages', {
+          fetch('https://cs5200-sp2020-server.herokuapp.com//conversations/' + nextProps.chatId + '/messages', {
             method: "GET",
             headers: {
               Accept: "application/json",
@@ -147,7 +147,7 @@ export default class ChatComponent extends React.Component {
         })
       }
       else {
-        fetch('http://localhost:4000/conversations/' + nextProps.chatId + '/messages', {
+        fetch('https://cs5200-sp2020-server.herokuapp.com//conversations/' + nextProps.chatId + '/messages', {
           method: "GET",
           headers: {
             Accept: "application/json",
